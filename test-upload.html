@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CloudNest API Upload Test</title>
+</head>
+<body>
+  <h2>CloudNest Backend Upload Test</h2>
+
+  <form id="uploadForm">
+    <input type="file" id="file" required>
+    <button type="submit">Upload File</button>
+  </form>
+
+<pre id="result"></pre>
+
+<h3>Delete a test file</h3>
+<input id="deleteName" placeholder="Enter stored filename">
+<button id="deleteButton">Delete File</button>
+<pre id="deleteResult"></pre>
+  <script>
+    const form = document.getElementById("uploadForm");
+    const result = document.getElementById("result");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const file = document.getElementById("file").files[0];
+      if (!file) return;
+
+      const data = new FormData();
+      data.append("file", file);
+
+      try {
+        const response = await fetch("http://localhost:5000/api/files", {
+          method: "POST",
+          body: data
+        });
+
+        const body = await response.json();
+        result.textContent = JSON.stringify(body, null, 2);
+      } catch (error) {
+        result.textContent = "Upload failed: " + error.message;
+      }
+    });
+    document.getElementById("deleteButton").addEventListener("click", async () => {
+  const name = document.getElementById("deleteName").value.trim();
+  const output = document.getElementById("deleteResult");
+
+  if (!name) {
+    output.textContent = "Enter a stored filename first.";
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/files/" + encodeURIComponent(name),
+      { method: "DELETE" }
+    );
+
+    const body = await response.json();
+    output.textContent = JSON.stringify(body, null, 2);
+  } catch (error) {
+    output.textContent = "Delete failed: " + error.message;
+  }
+});
+  </script>
+</body>
+</html>
