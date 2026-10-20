@@ -1,68 +1,129 @@
 # CloudNest — Cloud-Based File Storage System
 
-## 1. Project Overview
+CloudNest is a file-management web application developed as a college project. It provides a React dashboard and a Node.js/Express backend for uploading, listing, downloading, deleting, and sharing files through expiring links.
 
-CloudNest is a React-based file management application developed as a college project. The current prototype allows users to upload, search, download, and delete files using browser-based persistent storage.
+## Features
 
-The project is intended to demonstrate the core workflow of a cloud file storage system, with AWS integration planned as a future development stage.
+- **Dashboard:** View total files, storage usage, and image count.
+- **File upload:** Upload files through the web interface.
+- **File listing:** View uploaded files and their sizes.
+- **Search:** Find files by name.
+- **Download:** Download stored files.
+- **Delete:** Remove files from backend storage.
+- **Expiring share links:** Generate unique links that expire after 10 minutes, 1 hour, or 24 hours.
+- **Local backend storage:** Store uploaded files on the computer running the backend.
 
-## 2. Objectives
+## Technology Stack
 
-- Develop a user-friendly file management dashboard.
-- Support file upload, search, download, and deletion.
-- Persist uploaded files using IndexedDB.
-- Demonstrate time-limited sharing records.
-- Plan a secure and scalable AWS-based architecture.
+- Frontend: React, Vite, CSS
+- Backend: Node.js, Express.js
+- File uploads: Multer
+- Cross-origin requests: CORS
+- Sharing tokens: Node.js Crypto
+- Version control: Git and GitHub
+- Frontend deployment: Vercel
 
-## 3. Technologies Used
+## Project Structure
 
-- **Frontend:** React, JavaScript, Vite
-- **UI icons:** Lucide React
-- **Local persistence:** IndexedDB using the `idb` library
-- **Planned cloud services:** Amazon S3, AWS Lambda, API Gateway, DynamoDB, Amazon Cognito, IAM, CloudWatch
-- **Planned infrastructure and automation:** Terraform and GitHub Actions
+```text
+cloud-file-storage/
+├── src/
+│   ├── App.jsx
+│   ├── App.css
+│   ├── index.css
+│   └── main.jsx
+├── uploads/             # Created for uploaded files
+├── server.cjs
+├── test-upload.html
+├── package.json
+├── package-lock.json
+└── README.md
+```
 
-## 4. Implemented Features
+## Run the Project Locally
 
-- File upload and listing
-- File search
-- File download
-- File deletion
-- Persistent browser storage
-- Local demo sharing records with expiry times
-- Storage usage and file count display
+### Prerequisites
 
-## 5. Setup Instructions
+Install Node.js and npm.
 
-Requirements: Node.js and npm.
+### 1. Clone the repository
 
-1. Clone or download the project.
-2. Open the project directory in a terminal.
-3. Install dependencies:
+```bash
+git clone https://github.com/Goutamcode12/cloudnest-file-storage.git
+cd cloudnest-file-storage
+npm install
+```
 
-   `npm install`
+### 2. Start the backend
 
-4. Start the development server:
+Open a terminal in the project folder:
 
-   `npm run dev`
+```bash
+npm run server
+```
 
-5. Open the local URL printed in the terminal, usually `http://localhost:5173/`.
+The backend runs at:
 
-## 6. Current Limitations
+`http://localhost:5000`
 
-This prototype uses browser-based storage and is not yet connected to AWS. Files are not uploaded to an S3 bucket. Demo sharing records do not generate public links or enforce access restrictions. Authentication, backend APIs, cloud monitoring, and automated cloud deployment remain planned features.
+### 3. Start the frontend
 
-## 7. Planned Enhancements
+Open a second terminal in the same project folder:
 
-- Integrate Amazon S3 for cloud file storage.
-- Implement backend APIs using AWS Lambda and API Gateway.
-- Store file metadata in DynamoDB.
-- Add user authentication and authorization using Amazon Cognito and IAM.
-- Implement secure, expiring S3 pre-signed URLs.
-- Add infrastructure provisioning with Terraform.
-- Configure GitHub Actions for automated testing and deployment.
-- Configure CloudWatch monitoring and AWS Budgets.
+```bash
+npm run dev
+```
 
-## 8. Conclusion
+Open the local URL printed by Vite, normally:
 
-CloudNest provides a working local prototype of a file management interface. It establishes the frontend and local persistence foundation for a future secure, cloud-based file storage system.
+`http://localhost:5173`
+
+Keep both terminals running while using the local application.
+
+## API Endpoints
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/` | Check backend status |
+| POST | `/api/files` | Upload a file |
+| GET | `/api/files` | List stored files |
+| GET | `/api/files/:name` | Download a file |
+| DELETE | `/api/files/:name` | Delete a file |
+| POST | `/api/shares` | Create an expiring share link |
+| GET | `/api/share/:token` | Download a file through a share link |
+
+## Share Link Expiry
+
+The backend supports share-link durations of:
+
+- 10 minutes
+- 1 hour
+- 24 hours
+
+Share records are held in memory. Existing share links are invalidated when the backend restarts. The backend also checks whether the file still exists before serving a shared download.
+
+## Current Limitations
+
+- Uploaded files are stored on the backend computer, not in AWS S3.
+- Local share links use `localhost` and are not public internet links.
+- Share records are not persistent across backend restarts.
+- Authentication, user accounts, and access control have not yet been implemented.
+- The deployed frontend cannot access the local backend from other devices.
+- AWS infrastructure, infrastructure-as-code, automated deployment, monitoring, and budget alerts have not yet been integrated into the application.
+
+## Future Enhancements
+
+- Integrate AWS S3 for cloud file storage.
+- Add authentication and user-specific file access.
+- Store file metadata and sharing records in a database.
+- Deploy the backend to a publicly accessible hosting platform.
+- Add automated deployment and monitoring.
+- Improve security, validation, and error handling.
+
+## Repository
+
+GitHub: https://github.com/Goutamcode12/cloudnest-file-storage
+
+## Project Status
+
+The local prototype supports the core file-management operations and expiring share links. Cloud storage and production deployment remain future implementation tasks.
